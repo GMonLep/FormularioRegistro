@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,6 +47,9 @@ fun RegisterScreen(){
     var nombreCompleto by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var contrasenia by remember { mutableStateOf("") }
+    var contraseniaV by remember { mutableStateOf("") }
+    var mensajeExito by remember { mutableStateOf("") }
+    var sede by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -94,7 +99,74 @@ fun RegisterScreen(){
 
         Spacer(modifier = Modifier.height(12.dp)) // Espacio entre campos
 
-        
+        // ---------- CAMPO CONFIRMAR CONTRASEÑA ----------
+        TextField(
+            value = contraseniaV,
+            onValueChange = { contraseniaV = it }, // Actualiza estado
+            label = { Text("Confirmar Contraseña") }, // Etiqueta
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation() // Oculta caracteres
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        var expanded by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            OutlinedButton(onClick = { expanded = !expanded },  colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFFFFF),
+                contentColor = Color(0XFF000000)
+            )) {
+                Text("Selecciona tu Sede")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Sede Puerto Montt") },
+                    onClick = { sede="Sede Puerto Montt", }
+                )
+                DropdownMenuItem(
+                    text = { Text("Sede Concepción") },
+                    onClick = { sede = "Sede Concepción"}
+                )
+            }
+        }
+
+
+
+        // ---------- BOTÓN DE LOGIN ----------
+        Button(onClick = {
+            if (contrasenia == contraseniaV) { // Validación simple
+                mensajeExito = ""
+            } else {
+                mensajeExito = "Las contraseñas no coinciden❌"
+            }
+
+        },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFC107),
+                contentColor = Color(0XFFFFFFFF)
+            )
+        )
+
+        {
+            Text("Ingresar")
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // ---------- MENSAJE DE VALIDACIÓN ----------
+        if (mensajeExito.isNotEmpty()) {
+            Text(
+                text = mensajeExito,
+                fontSize = 18.sp,
+                color = if (mensajeExito.contains("✅")) Color(0xFF2E7D32) else Color(0xFFC62828)
+            )
+        }
 
     }
 }
